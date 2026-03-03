@@ -2,10 +2,10 @@
 
 import {
   CheckCircleIcon,
-  MoreVerticalIcon,
   MessageCircleIcon,
-  XCircleIcon,
+  MoreVerticalIcon,
   TrashIcon,
+  XCircleIcon,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
@@ -156,7 +156,7 @@ const AppointmentsTableActions = ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel className="border-primary/20 hover:bg-primary/5">Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteAppointmentClick} className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700">
+              <AlertDialogAction onClick={handleDeleteAppointmentClick} className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95">
                 Deletar
               </AlertDialogAction>
             </AlertDialogFooter>

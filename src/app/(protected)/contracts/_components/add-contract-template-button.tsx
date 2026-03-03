@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -15,7 +14,7 @@ export default function AddContractTemplateButton() {
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="bg-gradient-to-r from-indigo-600 to-cyan-600 font-medium shadow-md shadow-indigo-500/25 transition-all hover:from-indigo-700 hover:to-cyan-700 hover:shadow-lg hover:shadow-indigo-500/30"
+        className="bg-gradient-to-r from-clinic-primary to-clinic-secondary font-medium shadow-md shadow-clinic-primary/25 transition-all hover:brightness-95 hover:shadow-lg hover:shadow-clinic-primary/30"
       >
         <Plus className="mr-2 size-4" />
         Novo modelo

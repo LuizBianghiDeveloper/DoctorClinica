@@ -65,7 +65,7 @@ const AppointmentsChart = ({
   return (
     <Card className="min-w-0 overflow-hidden rounded-2xl border shadow-xl shadow-primary/5">
       <CardHeader className="flex flex-row items-center gap-3">
-        <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-md">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-clinic-primary to-clinic-secondary text-white shadow-md">
           <DollarSign className="size-5" />
         </div>
         <CardTitle>

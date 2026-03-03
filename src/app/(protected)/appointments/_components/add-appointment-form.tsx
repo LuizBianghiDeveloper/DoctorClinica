@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { AlertTriangle, CalendarIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useRef } from "react";
+import type { Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
@@ -109,7 +110,7 @@ const AddAppointmentForm = ({
 }: AddAppointmentFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     shouldUnregister: true,
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as Resolver<z.infer<typeof formSchema>>,
     defaultValues: {
       patientId: "",
       doctorId: "",
@@ -200,7 +201,7 @@ const AddAppointmentForm = ({
   const recurrenceCountRef = useRef(1);
 
   const createAppointmentAction = useAction(addAppointment, {
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       onSuccess?.();
       const n = recurrenceCountRef.current;
       toast.success(
@@ -607,7 +608,7 @@ const AddAppointmentForm = ({
                                 type="button"
                                 variant={checked ? "default" : "outline"}
                                 size="sm"
-                                className={checked ? "bg-gradient-to-r from-indigo-600 to-cyan-600" : "border-primary/20 hover:bg-primary/5"}
+                                className={checked ? "bg-gradient-to-r from-clinic-primary to-clinic-secondary" : "border-primary/20 hover:bg-primary/5"}
                                 onClick={() => {
                                   const next = checked
                                     ? field.value.filter((d) => d !== dayIndex)
@@ -682,7 +683,7 @@ const AddAppointmentForm = ({
                   <p className="text-muted-foreground text-xs">
                     Paciente receberá mensagem com data e horário. Configure a API
                     Twilio no .env. No sandbox, o paciente precisa ter enviado
-                    "join [código]" ao número do sandbox antes.
+                    &quot;join [código]&quot; ao número do sandbox antes.
                   </p>
                 </div>
               </FormItem>
@@ -693,7 +694,7 @@ const AddAppointmentForm = ({
             <Button
               type="submit"
               disabled={createAppointmentAction.isPending}
-              className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700"
+              className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
             >
               {createAppointmentAction.isPending
                 ? "Criando..."

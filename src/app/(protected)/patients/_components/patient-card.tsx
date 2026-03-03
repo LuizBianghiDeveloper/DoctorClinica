@@ -63,7 +63,7 @@ const PatientCard = ({ patient }: PatientCardProps) => {
       <CardHeader>
         <div className="flex items-center gap-3">
           <Avatar className="size-12 ring-2 ring-background shadow-md">
-            <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-cyan-500 text-base font-semibold text-white">
+            <AvatarFallback className="bg-gradient-to-br from-clinic-primary to-clinic-secondary text-base font-semibold text-white">
               {patientInitials}
             </AvatarFallback>
           </Avatar>
@@ -77,11 +77,11 @@ const PatientCard = ({ patient }: PatientCardProps) => {
       </CardHeader>
       <Separator />
       <CardContent className="flex flex-col gap-2">
-        <Badge variant="secondary" className="w-fit border-0 bg-indigo-500/10 text-indigo-700">
+        <Badge variant="secondary" className="w-fit border-0 bg-clinic-primary/10 text-clinic-primary">
           <Mail className="mr-1 size-3" />
           {patient.email}
         </Badge>
-        <Badge variant="secondary" className="w-fit border-0 bg-indigo-500/10 text-indigo-700">
+        <Badge variant="secondary" className="w-fit border-0 bg-clinic-primary/10 text-clinic-primary">
           <Phone className="mr-1 size-3" />
           {formatPhoneNumber(patient.phoneNumber)}
         </Badge>
@@ -97,7 +97,7 @@ const PatientCard = ({ patient }: PatientCardProps) => {
           onOpenChange={setIsUpsertPatientDialogOpen}
         >
           <DialogTrigger asChild>
-            <Button className="w-full bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700">
+            <Button className="w-full bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95">
               Ver detalhes
             </Button>
           </DialogTrigger>

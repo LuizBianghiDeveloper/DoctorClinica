@@ -35,7 +35,7 @@ const AddAppointmentButton = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700 shadow-md">
+        <Button className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95 shadow-md">
           <Plus />
           Novo agendamento
         </Button>

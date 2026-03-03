@@ -13,7 +13,7 @@ const AddPatientButton = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-indigo-600 to-cyan-600 font-medium shadow-md shadow-indigo-500/25 transition-all hover:from-indigo-700 hover:to-cyan-700 hover:shadow-lg hover:shadow-indigo-500/30">
+        <Button className="bg-gradient-to-r from-clinic-primary to-clinic-secondary font-medium shadow-md shadow-clinic-primary/25 transition-all hover:brightness-95 hover:shadow-lg hover:shadow-clinic-primary/30">
           <Plus className="size-4" />
           Adicionar paciente
         </Button>

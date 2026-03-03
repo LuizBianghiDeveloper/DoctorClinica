@@ -28,7 +28,7 @@ const StatsCards = ({
             title: "Faturamento",
             value: formatCurrencyInCents(totalRevenue),
             icon: DollarSignIcon,
-            iconBg: "bg-gradient-to-br from-emerald-500 to-cyan-500",
+            iconBg: "bg-gradient-to-br from-emerald-500 to-clinic-secondary",
           },
         ]
       : []),
@@ -36,7 +36,7 @@ const StatsCards = ({
       title: "Agendamentos",
       value: totalAppointments.toString(),
       icon: CalendarIcon,
-      iconBg: "bg-gradient-to-br from-indigo-500 to-blue-500",
+      iconBg: "bg-gradient-to-br from-clinic-primary to-blue-500",
     },
     {
       title: "Pacientes",
@@ -48,7 +48,7 @@ const StatsCards = ({
       title: "Profissionais",
       value: totalDoctors.toString(),
       icon: UsersIcon,
-      iconBg: "bg-gradient-to-br from-indigo-500 to-cyan-500",
+      iconBg: "bg-gradient-to-br from-clinic-primary to-clinic-secondary",
     },
   ];
 

@@ -1,11 +1,12 @@
 "use client";
 
 import dayjs from "dayjs";
-import { useState } from "react";
 import { FileText, Pencil, Trash2 } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import { deleteContractTemplate } from "@/actions/delete-contract-template";
-import { useAction } from "next-safe-action/hooks";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -22,10 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
 import type { contractTemplatesTable } from "@/db/schema";
-import { generateContractPDF } from "@/lib/contract-pdf";
 import type { ContractVariables } from "@/lib/contract-pdf";
+import { generateContractPDF } from "@/lib/contract-pdf";
 
 import AddContractTemplateButton from "./add-contract-template-button";
 import { UpsertContractTemplateForm } from "./upsert-contract-template-form";
@@ -81,7 +81,7 @@ export default function ContractsList({
       <div className="space-y-4">
         {templates.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-muted/20 py-16 text-center">
-            <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20">
+            <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-clinic-primary/20 to-clinic-secondary/20">
               <FileText className="text-muted-foreground size-8" />
             </div>
             <h3 className="mb-1 text-lg font-semibold">Nenhum modelo de contrato cadastrado</h3>
@@ -98,7 +98,7 @@ export default function ContractsList({
                 className="overflow-hidden rounded-2xl border shadow-xl shadow-primary/5 transition-all hover:shadow-2xl hover:shadow-primary/10"
               >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-md">
+                  <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-clinic-primary to-clinic-secondary text-white shadow-md">
                     <FileText className="size-5" />
                   </div>
                   <div className="flex gap-1">
@@ -189,7 +189,7 @@ export default function ContractsList({
               )}
             </div>
             <Button
-              className="w-full bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700"
+              className="w-full bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
               onClick={handleGenerate}
               disabled={!selectedPatientId || patients.length === 0}
             >

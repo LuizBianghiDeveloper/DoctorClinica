@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   PageContainer,
   PageContent,
@@ -11,7 +12,6 @@ import {
   PageHeaderContent,
   PageTitle,
 } from "@/components/ui/page-container";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -24,10 +24,10 @@ import { getAuditLogsPaginated } from "@/data/get-audit-logs";
 import WithAuthentication from "@/hocs/with-authentication";
 import { auth } from "@/lib/auth";
 
+import { ReportExportButtons } from "../reports/_components/report-export-buttons";
 import { AuditDatePicker } from "./_components/audit-date-picker";
 import { AuditExportFullButton } from "./_components/audit-export-full-button";
 import { AuditPagination } from "./_components/audit-pagination";
-import { ReportExportButtons } from "../reports/_components/report-export-buttons";
 
 const PAGE_SIZE = 20;
 
@@ -73,12 +73,12 @@ const AuditoriaPage = async ({ searchParams }: AuditoriaPageProps) => {
   return (
     <WithAuthentication mustHaveClinic mustHavePlan>
       <PageContainer className="relative overflow-hidden">
-        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
-        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
+        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
+        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
         <PageHeader className="relative">
           <PageHeaderContent>
             <div>
-              <PageTitle className="bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent">
+              <PageTitle className="bg-gradient-to-r from-clinic-primary to-clinic-secondary bg-clip-text text-transparent">
                 Auditoria
               </PageTitle>
               <PageDescription>

@@ -71,11 +71,40 @@ export const verificationsTable = pgTable("verifications", {
 export const clinicsTable = pgTable("clinics", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
+  address: text("address"),
+  phone: text("phone"),
+  cnpj: text("cnpj"),
+  website: text("website"),
+  logoUrl: text("logo_url"),
+  primaryColor: text("primary_color"),
+  secondaryColor: text("secondary_color"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
+
+export const clinicBusinessHoursTable = pgTable("clinic_business_hours", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  clinicId: uuid("clinic_id")
+    .notNull()
+    .references(() => clinicsTable.id, { onDelete: "cascade" }),
+  weekDay: integer("week_day").notNull(), // 0=domingo, 1=segunda, ..., 6=sábado
+  openTime: time("open_time").notNull(),
+  closeTime: time("close_time").notNull(),
+  isClosed: boolean("is_closed").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const clinicBusinessHoursTableRelations = relations(
+  clinicBusinessHoursTable,
+  ({ one }) => ({
+    clinic: one(clinicsTable, {
+      fields: [clinicBusinessHoursTable.clinicId],
+      references: [clinicsTable.id],
+    }),
+  }),
+);
 
 export const userRoleEnum = pgEnum("user_role", ["admin", "user"]);
 
@@ -212,6 +241,7 @@ export const clinicsTableRelations = relations(clinicsTable, ({ many }) => ({
   contractTemplates: many(contractTemplatesTable),
   rooms: many(roomsTable),
   usersToClinics: many(usersToClinicsTable),
+  businessHours: many(clinicBusinessHoursTable),
 }));
 
 export const doctorsTable = pgTable("doctors", {
@@ -372,6 +402,8 @@ export const appointmentsTable = pgTable("appointments", {
     onDelete: "set null",
   }),
   notes: text("notes"),
+  reminderSentAt: timestamp("reminder_sent_at"),
+  confirmationToken: text("confirmation_token"),
   clinicId: uuid("clinic_id")
     .notNull()
     .references(() => clinicsTable.id, { onDelete: "cascade" }),
@@ -409,6 +441,26 @@ export const appointmentsTableRelations = relations(
     room: one(roomsTable, {
       fields: [appointmentsTable.roomId],
       references: [roomsTable.id],
+    }),
+  }),
+);
+
+export const notificationLogTable = pgTable("notification_log", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  clinicId: uuid("clinic_id")
+    .notNull()
+    .references(() => clinicsTable.id, { onDelete: "cascade" }),
+  type: text("type").notNull(), // 'appointment_reminder' | 'birthday'
+  referenceId: text("reference_id").notNull(),
+  sentAt: timestamp("sent_at").defaultNow().notNull(),
+});
+
+export const notificationLogTableRelations = relations(
+  notificationLogTable,
+  ({ one }) => ({
+    clinic: one(clinicsTable, {
+      fields: [notificationLogTable.clinicId],
+      references: [clinicsTable.id],
     }),
   }),
 );

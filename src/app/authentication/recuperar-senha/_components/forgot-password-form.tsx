@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 const schema = z.object({
   email: z
@@ -36,7 +36,7 @@ export function ForgotPasswordForm() {
   const onSubmit = async (values: FormValues) => {
     const redirectTo = `${typeof window !== "undefined" ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL ?? ""}/authentication/redefinir-senha`;
 
-    const { error } = await authClient.requestPasswordReset({
+    const { error } = await authClient.forgetPassword({
       email: values.email,
       redirectTo,
     });

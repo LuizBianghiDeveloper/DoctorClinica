@@ -12,6 +12,7 @@ import {
   PageTitle,
 } from "@/components/ui/page-container";
 import { getAppointmentTypes } from "@/data/get-appointment-types";
+import { getClinic } from "@/data/get-clinic";
 import { getRooms } from "@/data/get-rooms";
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
@@ -33,7 +34,8 @@ const AppointmentsPage = async ({ searchParams }: AppointmentsPageProps) => {
   });
   const { doctorId: doctorIdParam } = await searchParams;
 
-  const [patients, doctors, appointments, appointmentTypes, rooms] = await Promise.all([
+  const clinicId = session!.user.clinic!.id;
+  const [patients, doctors, appointments, appointmentTypes, rooms, clinicData] = await Promise.all([
     db.query.patientsTable.findMany({
       where: eq(patientsTable.clinicId, session!.user.clinic!.id),
     }),
@@ -50,9 +52,12 @@ const AppointmentsPage = async ({ searchParams }: AppointmentsPageProps) => {
         room: true,
       },
     }),
-    getAppointmentTypes(session!.user.clinic!.id),
-    getRooms(session!.user.clinic!.id),
+    getAppointmentTypes(clinicId),
+    getRooms(clinicId),
+    getClinic(clinicId),
   ]);
+
+  const businessHours = clinicData.businessHours;
 
   const filteredAppointments = doctorIdParam
     ? appointments.filter((a) => a.doctorId === doctorIdParam)
@@ -63,11 +68,11 @@ const AppointmentsPage = async ({ searchParams }: AppointmentsPageProps) => {
   return (
     <WithAuthentication mustHaveClinic mustHavePlan>
       <PageContainer className="relative overflow-hidden">
-        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
-        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
+        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
+        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
         <PageHeader className="relative">
           <PageHeaderContent>
-            <PageTitle className="bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent">
+            <PageTitle className="bg-gradient-to-r from-clinic-primary to-clinic-secondary bg-clip-text text-transparent">
               Agendamentos
             </PageTitle>
             <PageDescription>
@@ -97,6 +102,7 @@ const AppointmentsPage = async ({ searchParams }: AppointmentsPageProps) => {
               appointments={filteredAppointments}
               doctors={doctorsForFilter}
               columns={appointmentsTableColumns}
+              businessHours={businessHours}
             />
           </Suspense>
         </PageContent>

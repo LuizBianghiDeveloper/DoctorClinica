@@ -12,7 +12,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { appointmentsTable } from "@/db/schema";
 
 import { AppointmentsDayCalendar } from "./appointments-day-calendar";
-import { appointmentsTableColumns } from "./table-columns";
 
 const LIST_PAGE_SIZE = 15;
 
@@ -21,16 +20,20 @@ type AppointmentWithRelations = (typeof appointmentsTable.$inferSelect) & {
   doctor: { id: string; name: string; specialties?: { specialty: string }[] };
 };
 
+export type ClinicBusinessHour = { weekDay: number; openTime: string; closeTime: string };
+
 interface AppointmentsViewProps {
   appointments: AppointmentWithRelations[];
   doctors: { id: string; name: string }[];
   columns: ColumnDef<AppointmentWithRelations>[];
+  businessHours: ClinicBusinessHour[];
 }
 
 export function AppointmentsView({
   appointments,
   doctors,
   columns,
+  businessHours,
 }: AppointmentsViewProps) {
   const searchParams = useSearchParams();
   const viewFromUrl = searchParams.get("view");
@@ -70,15 +73,19 @@ export function AppointmentsView({
       className="w-full"
     >
       <TabsList className="h-11 rounded-xl bg-muted/50 p-1">
-        <TabsTrigger value="calendar" asChild className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white">
+        <TabsTrigger value="calendar" asChild className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-clinic-primary data-[state=active]:to-clinic-secondary data-[state=active]:text-white">
           <Link href={buildCalendarHref()}>Calendário</Link>
         </TabsTrigger>
-        <TabsTrigger value="list" asChild className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white">
+        <TabsTrigger value="list" asChild className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-clinic-primary data-[state=active]:to-clinic-secondary data-[state=active]:text-white">
           <Link href={buildListHref(1)}>Lista</Link>
         </TabsTrigger>
       </TabsList>
       <TabsContent value="calendar" className="mt-4">
-        <AppointmentsDayCalendar appointments={appointments} doctors={doctors} />
+        <AppointmentsDayCalendar
+          appointments={appointments}
+          doctors={doctors}
+          businessHours={businessHours}
+        />
       </TabsContent>
       <TabsContent value="list" className="mt-4 space-y-4">
         <div className="overflow-x-auto rounded-2xl border border-border/60 bg-card shadow-xl shadow-primary/5">

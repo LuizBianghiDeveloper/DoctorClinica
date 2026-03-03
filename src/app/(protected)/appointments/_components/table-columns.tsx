@@ -6,7 +6,6 @@ import { ptBR } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
 import { appointmentsTable } from "@/db/schema";
-
 import { formatDoctorSpecialties } from "@/helpers/specialty";
 
 import AppointmentsTableActions from "./table-actions";

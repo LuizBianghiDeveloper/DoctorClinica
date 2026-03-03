@@ -6,8 +6,8 @@ import {
   DollarSignIcon,
   TrashIcon,
 } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
+import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
 import { deleteDoctor } from "@/actions/delete-doctor";
@@ -36,8 +36,8 @@ import { formatCurrencyInCents } from "@/helpers/currency";
 import { formatDoctorSpecialties } from "@/helpers/specialty";
 
 import {
-  getAvailability,
   type DoctorWithAvailability,
+  getAvailability,
 } from "../_helpers/availability";
 import { WEEK_DAY_LABELS } from "./schedule-time-options";
 
@@ -73,7 +73,7 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
           <Avatar className="size-12 ring-2 ring-background shadow-md">
-            <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-cyan-500 text-base font-semibold text-white">
+            <AvatarFallback className="bg-gradient-to-br from-clinic-primary to-clinic-secondary text-base font-semibold text-white">
               {doctorInitials}
             </AvatarFallback>
           </Avatar>
@@ -95,7 +95,7 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
                 <Badge
                   key={slot.weekDay}
                   variant="secondary"
-                  className="border-0 bg-indigo-500/10 text-xs font-medium text-indigo-700"
+                  className="border-0 bg-clinic-primary/10 text-xs font-medium text-clinic-primary"
                 >
                   <CalendarIcon className="mr-1 size-3" />
                   {WEEK_DAY_LABELS[slot.weekDay]?.slice(0, 3)} {formatTime(slot.fromTime)}-{formatTime(slot.toTime)}
@@ -106,14 +106,14 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
           <div className="flex flex-wrap gap-1.5">
             <Badge
               variant="secondary"
-              className="border-0 bg-indigo-500/10 text-xs font-medium text-indigo-700"
+              className="border-0 bg-clinic-primary/10 text-xs font-medium text-clinic-primary"
             >
               <CalendarIcon className="mr-1 size-3" />
               {availability.from.format("dddd")} a {availability.to.format("dddd")}
             </Badge>
             <Badge
               variant="secondary"
-              className="border-0 bg-indigo-500/10 text-xs font-medium text-indigo-700"
+              className="border-0 bg-clinic-primary/10 text-xs font-medium text-clinic-primary"
             >
               <ClockIcon className="mr-1 size-3" />
               {availability.from.format("HH:mm")} às{" "}
@@ -132,7 +132,7 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
       <Separator className="bg-border/60" />
       <CardFooter className="flex flex-col gap-2 py-4">
         <Button
-          className="w-full bg-gradient-to-r from-indigo-600 to-cyan-600 font-medium transition-all hover:from-indigo-700 hover:to-cyan-700 hover:shadow-lg"
+          className="w-full bg-gradient-to-r from-clinic-primary to-clinic-secondary font-medium transition-all hover:brightness-95 hover:shadow-lg"
           asChild
         >
           <Link href={`/doctors/${doctor.id}/editar`}>

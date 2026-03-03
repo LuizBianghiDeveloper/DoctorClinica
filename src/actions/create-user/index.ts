@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { generateRandomString,hashPassword } from "better-auth/crypto";
 import { eq } from "drizzle-orm";
-import { hashPassword, generateRandomString } from "better-auth/crypto";
+import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
 import { accountsTable, usersTable, usersToClinicsTable } from "@/db/schema";

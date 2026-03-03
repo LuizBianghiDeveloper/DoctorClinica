@@ -96,11 +96,53 @@ export function AppSidebar() {
   };
   return (
     <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border/50 bg-gradient-to-br from-indigo-600/10 via-transparent to-cyan-500/10 px-4 py-5">
+      <SidebarHeader
+        className={
+          (session.data?.user as { clinic?: { primaryColor?: string } } | undefined)?.clinic
+            ?.primaryColor
+            ? "border-b border-sidebar-border/50 px-4 py-5"
+            : "border-b border-sidebar-border/50 bg-gradient-to-br from-clinic-primary/10 via-transparent to-clinic-secondary/10 px-4 py-5"
+        }
+        style={
+          (session.data?.user as { clinic?: { primaryColor?: string; secondaryColor?: string } } | undefined)
+            ?.clinic?.primaryColor
+            ? {
+                background: `linear-gradient(to bottom right, ${(session.data?.user as { clinic?: { primaryColor?: string } })?.clinic?.primaryColor}15, transparent, ${(session.data?.user as { clinic?: { secondaryColor?: string } })?.clinic?.secondaryColor}15)`,
+              }
+            : undefined
+        }
+      >
         <Link href="/dashboard" className="flex items-center gap-2.5">
-          <div className="relative flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-cyan-500 text-white shadow-md">
-            <Stethoscope className="size-5" strokeWidth={2.5} />
-          </div>
+          {(session.data?.user as { clinic?: { logoUrl?: string } } | undefined)
+            ?.clinic?.logoUrl ? (
+            <div className="relative size-9 shrink-0 overflow-hidden rounded-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={(session.data?.user as { clinic?: { logoUrl?: string } })?.clinic?.logoUrl ?? ""}
+                alt="Logo da clínica"
+                className="size-full object-cover"
+              />
+            </div>
+          ) : (
+            <div
+              className={
+                (session.data?.user as { clinic?: { primaryColor?: string } } | undefined)?.clinic
+                  ?.primaryColor
+                  ? "relative flex size-9 shrink-0 items-center justify-center rounded-xl text-white shadow-md"
+                  : "relative flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-clinic-primary to-clinic-secondary text-white shadow-md"
+              }
+              style={
+                (session.data?.user as { clinic?: { primaryColor?: string; secondaryColor?: string } } | undefined)
+                  ?.clinic?.primaryColor
+                  ? {
+                      background: `linear-gradient(to bottom right, ${(session.data?.user as { clinic?: { primaryColor?: string } })?.clinic?.primaryColor}, ${(session.data?.user as { clinic?: { secondaryColor?: string } })?.clinic?.secondaryColor ?? (session.data?.user as { clinic?: { primaryColor?: string } })?.clinic?.primaryColor})`,
+                    }
+                  : undefined
+              }
+            >
+              <Stethoscope className="size-5" strokeWidth={2.5} />
+            </div>
+          )}
           <span className="text-base font-semibold tracking-tight text-foreground">
             Doutor Agenda
           </span>
@@ -126,8 +168,8 @@ export function AppSidebar() {
                       isActive={isActive}
                       className={
                         isActive
-                          ? "rounded-xl bg-gradient-to-r from-indigo-500/15 to-cyan-500/15 font-medium text-foreground [&>svg]:text-indigo-600"
-                          : "rounded-xl transition-colors hover:bg-indigo-500/5 [&>svg]:text-muted-foreground"
+                          ? "rounded-xl bg-gradient-to-r from-clinic-primary/15 to-clinic-secondary/15 font-medium text-foreground [&>svg]:text-clinic-primary"
+                          : "rounded-xl transition-colors hover:bg-clinic-primary/5 [&>svg]:text-muted-foreground"
                       }
                     >
                       <Link href={item.url}>
@@ -151,8 +193,8 @@ export function AppSidebar() {
                       className={
                         pathname === "/reports" ||
                         pathname.startsWith("/reports")
-                          ? "rounded-xl bg-gradient-to-r from-indigo-500/15 to-cyan-500/15 font-medium [&>svg]:text-indigo-600"
-                          : "rounded-xl hover:bg-indigo-500/5 [&>svg]:text-muted-foreground"
+                          ? "rounded-xl bg-gradient-to-r from-clinic-primary/15 to-clinic-secondary/15 font-medium [&>svg]:text-clinic-primary"
+                          : "rounded-xl hover:bg-clinic-primary/5 [&>svg]:text-muted-foreground"
                       }
                     >
                       <Link href="/reports">
@@ -167,8 +209,8 @@ export function AppSidebar() {
                       isActive={pathname === "/users"}
                       className={
                         pathname === "/users"
-                          ? "rounded-xl bg-gradient-to-r from-indigo-500/15 to-cyan-500/15 font-medium [&>svg]:text-indigo-600"
-                          : "rounded-xl hover:bg-indigo-500/5 [&>svg]:text-muted-foreground"
+                          ? "rounded-xl bg-gradient-to-r from-clinic-primary/15 to-clinic-secondary/15 font-medium [&>svg]:text-clinic-primary"
+                          : "rounded-xl hover:bg-clinic-primary/5 [&>svg]:text-muted-foreground"
                       }
                     >
                       <Link href="/users">
@@ -183,8 +225,8 @@ export function AppSidebar() {
                       isActive={pathname === "/auditoria"}
                       className={
                         pathname === "/auditoria"
-                          ? "rounded-xl bg-gradient-to-r from-indigo-500/15 to-cyan-500/15 font-medium [&>svg]:text-indigo-600"
-                          : "rounded-xl hover:bg-indigo-500/5 [&>svg]:text-muted-foreground"
+                          ? "rounded-xl bg-gradient-to-r from-clinic-primary/15 to-clinic-secondary/15 font-medium [&>svg]:text-clinic-primary"
+                          : "rounded-xl hover:bg-clinic-primary/5 [&>svg]:text-muted-foreground"
                       }
                     >
                       <Link href="/auditoria">
@@ -210,8 +252,8 @@ export function AppSidebar() {
                   isActive={pathname === "/settings"}
                   className={
                     pathname === "/settings"
-                      ? "rounded-xl bg-gradient-to-r from-indigo-500/15 to-cyan-500/15 font-medium [&>svg]:text-indigo-600"
-                      : "rounded-xl hover:bg-indigo-500/5 [&>svg]:text-muted-foreground"
+                      ? "rounded-xl bg-gradient-to-r from-clinic-primary/15 to-clinic-secondary/15 font-medium [&>svg]:text-clinic-primary"
+                      : "rounded-xl hover:bg-clinic-primary/5 [&>svg]:text-muted-foreground"
                   }
                 >
                   <Link href="/settings">
@@ -226,8 +268,8 @@ export function AppSidebar() {
                   isActive={pathname === "/subscription"}
                   className={
                     pathname === "/subscription"
-                      ? "rounded-xl bg-gradient-to-r from-indigo-500/15 to-cyan-500/15 font-medium [&>svg]:text-indigo-600"
-                      : "rounded-xl hover:bg-indigo-500/5 [&>svg]:text-muted-foreground"
+                      ? "rounded-xl bg-gradient-to-r from-clinic-primary/15 to-clinic-secondary/15 font-medium [&>svg]:text-clinic-primary"
+                      : "rounded-xl hover:bg-clinic-primary/5 [&>svg]:text-muted-foreground"
                   }
                 >
                   <Link href="/subscription">
@@ -254,7 +296,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border/50 bg-gradient-to-br from-indigo-500/5 via-transparent to-cyan-500/5 p-3">
+      <SidebarFooter className="border-t border-sidebar-border/50 bg-gradient-to-br from-clinic-primary/5 via-transparent to-clinic-secondary/5 p-3">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
@@ -264,7 +306,7 @@ export function AppSidebar() {
                   className="rounded-xl border border-border/50 bg-card/50 shadow-sm transition-all hover:bg-card hover:shadow-md"
                 >
                   <Avatar className="size-10 ring-2 ring-background">
-                    <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-cyan-500 text-sm font-semibold text-white">
+                    <AvatarFallback className="bg-gradient-to-br from-clinic-primary to-clinic-secondary text-sm font-semibold text-white">
                       {session.data?.user?.clinic?.name
                         ?.split(" ")
                         .map((n) => n[0])

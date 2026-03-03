@@ -1,13 +1,12 @@
 "use client";
 
-import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Lock } from "lucide-react";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -19,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 const changePasswordSchema = z
   .object({
@@ -77,7 +77,7 @@ export function ChangePasswordForm({ userEmail }: ChangePasswordFormProps) {
     <Card className="rounded-2xl border-border/60 shadow-xl shadow-primary/5">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-md">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-clinic-primary to-clinic-secondary text-white shadow-md">
             <Lock className="size-5" />
           </div>
           <div>
@@ -154,7 +154,7 @@ export function ChangePasswordForm({ userEmail }: ChangePasswordFormProps) {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700"
+              className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
             >
               {isSubmitting ? (
                 <Loader2 className="size-4 animate-spin" />

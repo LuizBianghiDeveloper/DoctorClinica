@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  ExportColumn,
   ExportOptions,
   exportToCSV,
   exportToPDF,
@@ -22,9 +21,7 @@ interface ReportExportButtonsProps {
 }
 
 export function ReportExportButtons({ options }: ReportExportButtonsProps) {
-  const handleExport = (
-    fn: (opts: ExportOptions) => void,
-  ) => {
+  const handleExport = (fn: (opts: ExportOptions) => void) => {
     fn(options);
   };
 
