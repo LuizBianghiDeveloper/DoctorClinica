@@ -1,21 +1,21 @@
 "use server";
 
-import dayjs from "dayjs";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import dayjs from "dayjs";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
+import {
+  getAvailableSlotsForDoctorAndDate,
+  normalizeTimeToHHMMSS,
+} from "@/data/get-available-slots";
 import { db } from "@/db";
 import { appointmentsTable, patientsTable } from "@/db/schema";
 import { createAuditLog } from "@/lib/audit";
 import { protectedWithClinicActionClient } from "@/lib/next-safe-action";
 import { sendWhatsAppMessage } from "@/lib/whatsapp";
 
-import {
-  getAvailableSlotsForDoctorAndDate,
-  normalizeTimeToHHMMSS,
-} from "@/data/get-available-slots";
 import { addAppointmentSchema } from "./schema";
 
 const createOneAppointment = async (

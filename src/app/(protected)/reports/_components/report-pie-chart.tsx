@@ -80,7 +80,7 @@ export function ReportPieChart({
             `${name} ${(percent * 100).toFixed(0)}%`
           }
         >
-          {chartData.map((entry, index) => (
+          {chartData.map((entry) => (
             <Cell key={entry.name} fill={entry.fill} />
           ))}
         </Pie>

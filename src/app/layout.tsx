@@ -5,6 +5,8 @@ import { Manrope } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
+import { ClinicThemeProvider } from "@/components/clinic-theme-provider";
+import { FaviconUpdater } from "@/components/favicon-updater";
 import { Toaster } from "@/components/ui/sonner";
 import { ReactQueryProvider } from "@/providers/react-query";
 
@@ -33,7 +35,10 @@ export default function RootLayout({
           crawlSpeed={200}
         />
         <ReactQueryProvider>
-          <NuqsAdapter>{children}</NuqsAdapter>
+          <ClinicThemeProvider>
+            <FaviconUpdater />
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </ClinicThemeProvider>
         </ReactQueryProvider>
         <Toaster position="bottom-center" richColors theme="light" />
       </body>

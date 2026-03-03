@@ -5,8 +5,8 @@ import { and, eq, gte, lte } from "drizzle-orm";
 import { db } from "@/db";
 import {
   appointmentsTable,
-  doctorTimeBlocksTable,
   doctorsTable,
+  doctorTimeBlocksTable,
 } from "@/db/schema";
 import { generateTimeSlots } from "@/helpers/time";
 

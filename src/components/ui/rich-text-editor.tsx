@@ -1,35 +1,35 @@
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
+import Underline from "@tiptap/extension-underline";
+import { EditorContent,useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import {
   BoldIcon,
-  ItalicIcon,
-  UnderlineIcon,
-  StrikethroughIcon,
-  TableIcon,
-  ListIcon,
-  ListOrderedIcon,
+  CodeIcon,
   Heading2Icon,
   Heading3Icon,
-  QuoteIcon,
-  CodeIcon,
-  MinusIcon,
+  ItalicIcon,
   LinkIcon,
+  ListIcon,
+  ListOrderedIcon,
+  MinusIcon,
+  QuoteIcon,
+  StrikethroughIcon,
+  TableIcon,
+  UnderlineIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 const getExtensions = (placeholderText: string) => [
@@ -43,10 +43,7 @@ const getExtensions = (placeholderText: string) => [
     openOnClick: false,
     HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
   }),
-  TableKit.configure({
-    resizable: false,
-    renderWrapper: false,
-  }),
+  TableKit.configure({}),
 ];
 
 interface RichTextEditorProps {
@@ -110,7 +107,7 @@ export function RichTextEditor({
   useEffect(() => {
     if (!editor) return;
     if (value !== editor.getHTML()) {
-      editor.commands.setContent(value || "", false);
+      editor.commands.setContent(value || "", { emitUpdate: false });
     }
   }, [value, editor]);
 

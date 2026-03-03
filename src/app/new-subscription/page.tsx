@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
 import { SubscriptionPlan } from "../(protected)/subscription/_components/subscription-plan";
-
 import { SkipSubscriptionButton } from "./_components/skip-subscription-button";
 
 export default async function NewSubscriptionPage() {

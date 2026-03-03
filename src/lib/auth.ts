@@ -44,14 +44,18 @@ export const auth = betterAuth({
       // TODO: Ao adaptar para o usuário ter múltiplas clínicas, deve-se mudar esse código
       const clinic = clinics?.[0];
       const role = (clinic as { role?: string } | undefined)?.role ?? "user";
+      const clinicData = clinic?.clinic;
       return {
         user: {
           ...user,
           plan: userData?.plan,
-          clinic: clinic?.clinicId
+          clinic: clinic?.clinicId && clinicData
             ? {
-                id: clinic?.clinicId,
-                name: clinic?.clinic?.name,
+                id: clinic.clinicId,
+                name: clinicData.name,
+                logoUrl: clinicData.logoUrl ?? undefined,
+                primaryColor: clinicData.primaryColor ?? undefined,
+                secondaryColor: clinicData.secondaryColor ?? undefined,
               }
             : undefined,
           role: role as "admin" | "user",

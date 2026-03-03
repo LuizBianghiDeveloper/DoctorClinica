@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon, Clock, PlusIcon, TrashIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -405,7 +405,7 @@ export function DoctorTimeBlocksForm({
                   <Button
                     type="submit"
                     disabled={upsertAction.isPending}
-                    className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700"
+                    className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
                   >
                     {upsertAction.isPending ? "Salvando..." : "Adicionar"}
                   </Button>

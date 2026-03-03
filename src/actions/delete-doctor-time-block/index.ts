@@ -5,10 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { db } from "@/db";
-import {
-  doctorTimeBlocksTable,
-  doctorsTable,
-} from "@/db/schema";
+import { doctorTimeBlocksTable } from "@/db/schema";
 import { createAuditLog } from "@/lib/audit";
 import { protectedWithClinicActionClient } from "@/lib/next-safe-action";
 

@@ -16,7 +16,7 @@ export default function CreateUserButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-indigo-600 to-cyan-600 shadow-md hover:from-indigo-700 hover:to-cyan-700">
+        <Button className="bg-gradient-to-r from-clinic-primary to-clinic-secondary shadow-md hover:brightness-95">
           <Plus />
           Novo usuário
         </Button>

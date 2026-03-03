@@ -60,8 +60,8 @@ export default async function PacientesInativosPage({
   return (
     <WithAuthentication mustHaveClinic mustHavePlan>
       <PageContainer className="relative overflow-hidden">
-        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
-        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
+        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
+        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
         <PageHeader className="relative">
           <PageHeaderContent>
             <div className="flex items-center gap-4">
@@ -77,7 +77,7 @@ export default async function PacientesInativosPage({
                 </Link>
               </Button>
               <div>
-                <PageTitle className="bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent">
+                <PageTitle className="bg-gradient-to-r from-clinic-primary to-clinic-secondary bg-clip-text text-transparent">
                   Pacientes inativos
                 </PageTitle>
                 <PageDescription>

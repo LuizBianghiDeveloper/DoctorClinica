@@ -1,15 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { Plus, Stethoscope, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
-
-import { Plus, Stethoscope, Trash2 } from "lucide-react";
 
 import { upsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
@@ -40,8 +39,8 @@ import {
 } from "@/components/ui/select";
 import { doctorsTable } from "@/db/schema";
 
-import { getScheduleFromDoctor } from "../_helpers/availability";
 import { medicalSpecialties } from "../_constants";
+import { getScheduleFromDoctor } from "../_helpers/availability";
 import {
   defaultFromTime,
   defaultToTime,
@@ -435,7 +434,7 @@ const UpsertDoctorForm = ({
                   key={weekDay}
                   className={`flex flex-wrap items-center gap-3 rounded-xl border p-4 transition-colors ${
                     isWorking
-                      ? "border-border/60 bg-indigo-500/5"
+                      ? "border-border/60 bg-clinic-primary/5"
                       : "border-border/40 bg-muted/20"
                   }`}
                 >
@@ -543,7 +542,7 @@ const UpsertDoctorForm = ({
               <Button
                 type="submit"
                 disabled={upsertDoctorAction.isPending}
-                className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700"
+                className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
               >
                 {upsertDoctorAction.isPending
                   ? "Salvando..."
@@ -557,7 +556,7 @@ const UpsertDoctorForm = ({
               <Button
                 type="submit"
                 disabled={upsertDoctorAction.isPending}
-                className="bg-gradient-to-r from-indigo-600 to-cyan-600 font-medium shadow-md shadow-indigo-500/25 hover:from-indigo-700 hover:to-cyan-700 hover:shadow-lg"
+                className="bg-gradient-to-r from-clinic-primary to-clinic-secondary font-medium shadow-md shadow-clinic-primary/25 hover:brightness-95 hover:shadow-lg"
               >
                 {upsertDoctorAction.isPending
                   ? "Salvando..."
@@ -575,7 +574,7 @@ const UpsertDoctorForm = ({
     return (
       <div className="space-y-8">
         <div className="flex items-start gap-4">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-md">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-clinic-primary to-clinic-secondary text-white shadow-md">
             <Stethoscope className="size-6" />
           </div>
           <div className="space-y-1">

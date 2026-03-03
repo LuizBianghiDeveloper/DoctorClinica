@@ -70,11 +70,11 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   return (
     <WithAuthentication mustHaveClinic mustHavePlan>
       <PageContainer className="relative overflow-hidden">
-        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
-        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
+        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
+        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
         <PageHeader className="relative">
           <PageHeaderContent>
-            <PageTitle className="bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent">
+            <PageTitle className="bg-gradient-to-r from-clinic-primary to-clinic-secondary bg-clip-text text-transparent">
               Dashboard
             </PageTitle>
             <PageDescription>
@@ -116,7 +116,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
             <Card className="min-w-0 rounded-2xl shadow-xl shadow-primary/5">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-md">
+                  <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-clinic-primary to-clinic-secondary text-white shadow-md">
                     <Calendar className="size-5" />
                   </div>
                   <CardTitle className="text-base">

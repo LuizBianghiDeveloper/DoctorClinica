@@ -20,7 +20,7 @@ export function SkipSubscriptionButton() {
       type="button"
       variant="ghost"
       className="mt-4 w-full text-muted-foreground"
-      onClick={() => execute({})}
+      onClick={() => execute(undefined)}
       disabled={isExecuting}
     >
       {isExecuting ? (

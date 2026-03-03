@@ -19,7 +19,7 @@ export default function TopDoctors({ doctors }: TopDoctorsProps) {
       <CardContent>
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-md">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-clinic-primary to-clinic-secondary text-white shadow-md">
               <Briefcase className="size-5" />
             </div>
             <CardTitle className="text-base">Profissionais</CardTitle>
@@ -35,7 +35,7 @@ export default function TopDoctors({ doctors }: TopDoctorsProps) {
             >
               <div className="flex min-w-0 items-center gap-4">
                 <Avatar className="size-10 shrink-0 ring-2 ring-background">
-                  <AvatarFallback className="bg-gradient-to-br from-indigo-100 to-cyan-100 text-sm font-medium text-indigo-700">
+                  <AvatarFallback className="bg-gradient-to-br from-clinic-primary/20 to-clinic-secondary/20 text-sm font-medium text-clinic-primary">
                     {doctor.name
                       .split(" ")
                       .map((n) => n[0])

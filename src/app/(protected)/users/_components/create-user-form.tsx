@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { createUser } from "@/actions/create-user";
+import { createUserSchema } from "@/actions/create-user/schema";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -32,8 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { createUserSchema } from "@/actions/create-user/schema";
 
 interface CreateUserFormProps {
   onSuccess?: () => void;
@@ -160,7 +159,7 @@ export default function CreateUserForm({ onSuccess }: CreateUserFormProps) {
             <Button
               type="submit"
               disabled={createUserAction.isExecuting}
-              className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700"
+              className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
             >
               {createUserAction.isExecuting ? (
                 <Loader2 className="size-4 animate-spin" />

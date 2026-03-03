@@ -1,11 +1,10 @@
 "use server";
 
 import dayjs from "dayjs";
+import { z } from "zod";
 
 import { getAuditLogsForExport } from "@/data/get-audit-logs";
 import { protectedWithClinicActionClient } from "@/lib/next-safe-action";
-
-import { z } from "zod";
 
 const schema = z.object({
   from: z.string().min(1, "Data inicial é obrigatória."),

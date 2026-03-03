@@ -3,8 +3,8 @@
 import dayjs from "dayjs";
 import { AlertTriangle, FileText, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -18,7 +18,11 @@ type AppointmentWithDoctor = {
   date: Date;
   endDate: Date | null;
   notes: string | null;
-  doctor: typeof doctorsTable.$inferSelect | null;
+  doctor:
+    | (typeof doctorsTable.$inferSelect & {
+        specialties?: { specialty: string }[];
+      })
+    | null;
 };
 
 interface PatientHistoryContentProps {
@@ -29,7 +33,7 @@ interface PatientHistoryContentProps {
 }
 
 export function PatientHistoryContent({
-  patientId,
+  patientId: _patientId,
   patientName,
   allergiesRestrictions,
   initialAppointments,
@@ -92,7 +96,7 @@ export function PatientHistoryContent({
 
       {appointments.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-muted/20 py-16 text-center">
-          <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20">
+          <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-clinic-primary/20 to-clinic-secondary/20">
             <FileText className="text-muted-foreground size-8" />
           </div>
           <p className="text-muted-foreground text-sm">Nenhuma consulta registrada para {patientName}.</p>
@@ -135,7 +139,7 @@ export function PatientHistoryContent({
                         <div className="flex gap-2">
                           <Button
                             size="sm"
-                            className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700"
+                            className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
                             onClick={() => handleSaveNotes(appointment.id)}
                             disabled={updateNotesAction.isExecuting}
                           >

@@ -141,6 +141,14 @@ No [Google Cloud Console](https://console.cloud.google.com):
 | `TWILIO_AUTH_TOKEN` | Auth Token | Production |
 | `TWILIO_WHATSAPP_FROM` | Número no formato `whatsapp:+5511999999999` | Production |
 
+#### Notificações proativas (cron)
+
+| Nome | Valor | Ambiente |
+|------|-------|----------|
+| `CRON_SECRET` | String aleatória para proteger o endpoint de cron | Production |
+
+Usado pelas notificações automáticas: lembrete 24h antes da consulta, confirmação de presença e parabéns de aniversário. O `vercel.json` já está configurado para rodar o cron a cada 2 horas.
+
 ### 2.4 Deploy
 
 1. Clique em **Deploy**

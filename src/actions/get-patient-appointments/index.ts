@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, and } from "drizzle-orm";
+import { and,eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db";

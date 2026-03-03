@@ -168,7 +168,7 @@ export function UpsertRoomForm({
             <Button
               type="submit"
               disabled={upsertAction.isPending}
-              className="bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700"
+              className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
             >
               {upsertAction.isPending ? "Salvando..." : room ? "Atualizar" : "Criar"}
             </Button>

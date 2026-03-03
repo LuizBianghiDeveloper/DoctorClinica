@@ -2,13 +2,12 @@
 
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 import { db } from "@/db";
 import { appointmentsTable } from "@/db/schema";
 import { createAuditLog } from "@/lib/audit";
 import { protectedWithClinicActionClient } from "@/lib/next-safe-action";
-
-import { z } from "zod";
 
 const STATUS_LABELS: Record<string, string> = {
   scheduled: "Agendado",

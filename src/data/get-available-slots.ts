@@ -1,10 +1,11 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import {
   appointmentsTable,
+  clinicBusinessHoursTable,
   doctorsTable,
   doctorTimeBlocksTable,
 } from "@/db/schema";
@@ -40,6 +41,22 @@ export async function getAvailableSlotsForDoctorAndDate(
   }
 
   const selectedDayOfWeek = dayjs(dateStr).day();
+  const clinicId = doctor.clinicId;
+
+  const clinicHoursForDay = await db.query.clinicBusinessHoursTable.findFirst({
+    where: and(
+      eq(clinicBusinessHoursTable.clinicId, clinicId),
+      eq(clinicBusinessHoursTable.weekDay, selectedDayOfWeek),
+    ),
+  });
+
+  const allClinicHours = await db.query.clinicBusinessHoursTable.findMany({
+    where: eq(clinicBusinessHoursTable.clinicId, clinicId),
+  });
+
+  if (allClinicHours.length > 0 && !clinicHoursForDay) {
+    return [];
+  }
 
   let slotsForDay: { from: string; to: string }[] = [];
 
@@ -180,6 +197,21 @@ export async function getAvailableSlotsForDoctorAndDate(
     });
     const isToday = dayjs(dateStr).isSame(dayjs(), "day");
     for (const time of inRange) {
+      if (clinicHoursForDay) {
+        const clinicOpen = String(clinicHoursForDay.openTime).slice(0, 8);
+        const clinicClose = String(clinicHoursForDay.closeTime).slice(0, 8);
+        const [h, m] = time.split(":").map(Number);
+        const slotEndTime = dayjs(dateStr)
+          .hour(h ?? 0)
+          .minute(m ?? 0)
+          .second(0)
+          .add(30, "minute")
+          .format("HH:mm:ss");
+        if (time < clinicOpen || slotEndTime > clinicClose) {
+          continue;
+        }
+      }
+
       const slotTaken = blockedSlots.has(time);
       let available = !slotTaken;
       if (isToday && available) {

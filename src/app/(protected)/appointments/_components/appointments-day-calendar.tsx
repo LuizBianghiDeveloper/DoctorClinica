@@ -24,31 +24,54 @@ const DOCTOR_COLORS = [
   "bg-violet-500/90 border-violet-600",
   "bg-teal-500/90 border-teal-600",
   "bg-orange-500/90 border-orange-600",
-  "bg-indigo-500/90 border-indigo-600",
+  "bg-clinic-primary/90 border-clinic-primary",
   "bg-pink-500/90 border-pink-600",
-  "bg-cyan-500/90 border-cyan-600",
+  "bg-clinic-secondary/90 border-clinic-secondary",
 ];
 
 const ROW_HEIGHT_PX = 60;
-const FIRST_HOUR = 6;
-const SLOTS_COUNT = 32;
+const DEFAULT_FIRST_HOUR = 8;
+const DEFAULT_LAST_HOUR = 22;
 
-const TIME_SLOTS = Array.from({ length: SLOTS_COUNT }, (_, i) => {
-  const hour = FIRST_HOUR + Math.floor(i / 2);
-  const min = (i % 2) * 30;
-  return { hour, min, label: `${hour.toString().padStart(2, "0")}:${min.toString().padStart(2, "0")}` };
-});
+function parseTimeToMinutes(timeStr: string): number {
+  const s = String(timeStr).slice(0, 8);
+  const [h, m] = s.split(":").map(Number);
+  return (h ?? 0) * 60 + (m ?? 0);
+}
+
+function buildTimeSlots(
+  firstHour: number,
+  firstMin: number,
+  lastHour: number,
+  lastMin: number,
+): { hour: number; min: number; label: string }[] {
+  const startMinutes = firstHour * 60 + firstMin;
+  const endMinutes = lastHour * 60 + lastMin;
+  const slots: { hour: number; min: number; label: string }[] = [];
+  for (let mins = startMinutes; mins < endMinutes; mins += 30) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    slots.push({
+      hour: h,
+      min: m,
+      label: `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`,
+    });
+  }
+  return slots;
+}
 
 function getBlockStyle(
   date: Date,
   endDate: Date | null,
+  firstHour: number,
+  firstMin: number,
 ): { top: number; height: number } {
   const start = dayjs(date);
   const end = endDate ? dayjs(endDate) : start.add(30, "minute");
   const durationMinutes = Math.max(30, end.diff(start, "minute"));
   const slotCount = Math.ceil(durationMinutes / 30);
-  const startMinutes = (start.hour() - FIRST_HOUR) * 60 + start.minute();
-  const slotIndex = startMinutes / 30;
+  const startMinutes = start.hour() * 60 + start.minute() - (firstHour * 60 + firstMin);
+  const slotIndex = Math.max(0, startMinutes / 30);
   return {
     top: slotIndex * ROW_HEIGHT_PX + 2,
     height: slotCount * ROW_HEIGHT_PX,
@@ -85,9 +108,12 @@ type AppointmentWithRelations = (typeof appointmentsTable.$inferSelect) & {
   doctor: { id: string; name: string; specialties?: { specialty: string }[] };
 };
 
+type ClinicBusinessHour = { weekDay: number; openTime: string; closeTime: string };
+
 interface AppointmentsDayCalendarProps {
   appointments: AppointmentWithRelations[];
   doctors: { id: string; name: string }[];
+  businessHours: ClinicBusinessHour[];
 }
 
 function getDoctorColorIndex(doctorId: string, doctors: { id: string }[]): number {
@@ -98,8 +124,34 @@ function getDoctorColorIndex(doctorId: string, doctors: { id: string }[]): numbe
 export function AppointmentsDayCalendar({
   appointments,
   doctors,
+  businessHours,
 }: AppointmentsDayCalendarProps) {
   const [selectedDate, setSelectedDate] = useState(() => dayjs().startOf("day").toDate());
+
+  const { timeSlots, firstHour, firstMin, isClosed } = useMemo(() => {
+    const weekDay = dayjs(selectedDate).day();
+    const hoursForDay = businessHours.find((h) => h.weekDay === weekDay);
+    if (hoursForDay) {
+      const openMins = parseTimeToMinutes(hoursForDay.openTime);
+      const closeMins = parseTimeToMinutes(hoursForDay.closeTime);
+      const firstH = Math.floor(openMins / 60);
+      const firstM = openMins % 60;
+      const lastH = Math.floor(closeMins / 60);
+      const lastM = closeMins % 60;
+      const slots = buildTimeSlots(firstH, firstM, lastH, lastM);
+      return { timeSlots: slots, firstHour: firstH, firstMin: firstM, isClosed: false };
+    }
+    if (businessHours.length > 0) {
+      return {
+        timeSlots: [],
+        firstHour: DEFAULT_FIRST_HOUR,
+        firstMin: 0,
+        isClosed: true,
+      };
+    }
+    const slots = buildTimeSlots(DEFAULT_FIRST_HOUR, 0, DEFAULT_LAST_HOUR, 0);
+    return { timeSlots: slots, firstHour: DEFAULT_FIRST_HOUR, firstMin: 0, isClosed: false };
+  }, [selectedDate, businessHours]);
 
   const dayAppointments = useMemo(() => {
     const start = dayjs(selectedDate).startOf("day");
@@ -174,11 +226,16 @@ export function AppointmentsDayCalendar({
         {/* Grid do dia: faixas de horário + blocos do início ao fim */}
       <div className="rounded-2xl border border-border/60 bg-card shadow-xl shadow-primary/5">
         <div className="max-h-[60vh] overflow-y-auto">
+          {isClosed ? (
+            <div className="flex min-h-[200px] items-center justify-center py-12 text-muted-foreground">
+              Clínica fechada neste dia
+            </div>
+          ) : (
           <div
             className="relative"
-            style={{ minHeight: SLOTS_COUNT * ROW_HEIGHT_PX }}
+            style={{ minHeight: timeSlots.length * ROW_HEIGHT_PX }}
           >
-            {TIME_SLOTS.map((slot) => (
+            {timeSlots.map((slot) => (
               <div
                 key={slot.label}
                 className="flex border-b last:border-b-0"
@@ -196,6 +253,8 @@ export function AppointmentsDayCalendar({
                   const { top, height } = getBlockStyle(
                     appointment.date,
                     appointment.endDate ?? null,
+                    firstHour,
+                    firstMin,
                   );
                   const { column, total } = overlapColumns.get(appointment) ?? {
                     column: 0,
@@ -237,6 +296,7 @@ export function AppointmentsDayCalendar({
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
     </div>

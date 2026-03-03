@@ -1,7 +1,8 @@
 import { and, eq, ilike, sql } from "drizzle-orm";
-import { headers } from "next/headers";
 import { UsersRound } from "lucide-react";
+import { headers } from "next/headers";
 import { Suspense } from "react";
+
 import {
   PageActions,
   PageContainer,
@@ -59,11 +60,11 @@ const PatientsPage = async ({ searchParams }: PatientsPageProps) => {
   return (
     <WithAuthentication mustHaveClinic mustHavePlan>
       <PageContainer className="relative overflow-hidden">
-        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
-        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-indigo-500/5 to-cyan-500/5" />
+        <div className="absolute -right-32 -top-32 size-64 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
+        <div className="absolute -bottom-20 -left-20 size-80 rounded-full bg-gradient-to-br from-clinic-primary/5 to-clinic-secondary/5" />
         <PageHeader className="relative">
           <PageHeaderContent>
-            <PageTitle className="bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent">
+            <PageTitle className="bg-gradient-to-r from-clinic-primary to-clinic-secondary bg-clip-text text-transparent">
               Pacientes
             </PageTitle>
             <PageDescription>
@@ -81,7 +82,7 @@ const PatientsPage = async ({ searchParams }: PatientsPageProps) => {
             </Suspense>
             {totalCount === 0 ? (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-muted/20 py-16 text-center">
-                <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20">
+                <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-clinic-primary/20 to-clinic-secondary/20">
                   <UsersRound className="text-muted-foreground size-8" />
                 </div>
                 <h3 className="mb-1 text-lg font-semibold">

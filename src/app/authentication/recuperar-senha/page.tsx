@@ -9,7 +9,7 @@ export default function RecuperarSenhaPage() {
   return (
     <div className="flex min-h-screen">
       {/* Painel esquerdo - Branding */}
-      <div className="relative hidden w-[480px] flex-shrink-0 overflow-hidden bg-gradient-to-b from-indigo-700 via-indigo-600 to-cyan-500 lg:block">
+      <div className="relative hidden w-[480px] flex-shrink-0 overflow-hidden bg-gradient-to-b from-clinic-primary via-clinic-primary/90 to-clinic-secondary lg:block">
         <div className="absolute -left-16 -top-16 size-64 rounded-full bg-white/10" />
         <div className="absolute -right-20 top-1/3 size-80 rounded-full bg-white/5" />
         <div className="absolute bottom-20 left-1/4 size-40 rounded-full bg-white/8" />

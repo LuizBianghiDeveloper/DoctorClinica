@@ -65,10 +65,26 @@ export const PageDescription = ({
   return <p className="text-muted-foreground text-sm">{children}</p>;
 };
 
-export const PageActions = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex items-center gap-2">{children}</div>;
+export const PageActions = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div className={cn("flex items-center gap-2", className)}>{children}</div>
+  );
 };
 
-export const PageContent = ({ children }: { children: React.ReactNode }) => {
-  return <div className="min-w-0 space-y-6">{children}</div>;
+export const PageContent = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div className={cn("min-w-0 space-y-6", className)}>{children}</div>
+  );
 };

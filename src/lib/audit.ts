@@ -1,7 +1,7 @@
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
+import * as schema from "@/db/schema";
 import { auditLogTable } from "@/db/schema";
-import type { schema } from "@/db/schema";
 
 type Db = NodePgDatabase<typeof schema>;
 
