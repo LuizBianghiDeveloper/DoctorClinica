@@ -7,8 +7,6 @@ import { db } from "@/db";
 import * as schema from "@/db/schema";
 import { usersTable, usersToClinicsTable } from "@/db/schema";
 
-const FIVE_MINUTES = 5 * 60;
-
 const baseURL =
   process.env.BETTER_AUTH_URL ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
@@ -91,10 +89,9 @@ export const auth = betterAuth({
     },
   },
   session: {
-    cookieCache: {
-      enabled: true,
-      maxAge: FIVE_MINUTES,
-    },
+    // cookieCache desabilitado: customSession depende de usersToClinics, que muda
+    // quando o usuário cria/vincula uma clínica. Com cache, a sessão ficava
+    // desatualizada (sem clinic/role) após o primeiro login com Google.
     modelName: "sessionsTable",
   },
   account: {
