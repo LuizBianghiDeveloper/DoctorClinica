@@ -77,11 +77,13 @@ const LoginForm = () => {
         password: values.password,
       },
       {
+        callbackURL: "/dashboard",
         onSuccess: () => {
           router.push("/dashboard");
         },
-        onError: () => {
-          toast.error("E-mail ou senha inválidos.");
+        onError: (ctx) => {
+          console.error("[Auth] Login error:", ctx.error);
+          toast.error(ctx.error?.message ?? "E-mail ou senha inválidos.");
         },
       },
     );

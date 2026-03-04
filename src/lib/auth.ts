@@ -9,7 +9,13 @@ import { usersTable, usersToClinicsTable } from "@/db/schema";
 
 const FIVE_MINUTES = 5 * 60;
 
+const baseURL =
+  process.env.BETTER_AUTH_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
+
 export const auth = betterAuth({
+  baseURL,
+  trustedOrigins: baseURL ? [baseURL] : undefined,
   database: drizzleAdapter(db, {
     provider: "pg",
     usePlural: true,
