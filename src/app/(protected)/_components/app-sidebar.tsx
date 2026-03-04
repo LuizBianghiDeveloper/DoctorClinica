@@ -38,6 +38,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { SUBSCRIPTION_ENABLED } from "@/config/subscription";
 import { authClient } from "@/lib/auth-client";
 
 const items = [
@@ -262,22 +263,24 @@ export function AppSidebar() {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === "/subscription"}
-                  className={
-                    pathname === "/subscription"
-                      ? "rounded-xl bg-gradient-to-r from-clinic-primary/15 to-clinic-secondary/15 font-medium [&>svg]:text-clinic-primary"
-                      : "rounded-xl hover:bg-clinic-primary/5 [&>svg]:text-muted-foreground"
-                  }
-                >
-                  <Link href="/subscription">
-                    <Gem className="size-4 shrink-0" />
-                    <span>Assinatura</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {SUBSCRIPTION_ENABLED && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/subscription"}
+                    className={
+                      pathname === "/subscription"
+                        ? "rounded-xl bg-gradient-to-r from-clinic-primary/15 to-clinic-secondary/15 font-medium [&>svg]:text-clinic-primary"
+                        : "rounded-xl hover:bg-clinic-primary/5 [&>svg]:text-muted-foreground"
+                    }
+                  >
+                    <Link href="/subscription">
+                      <Gem className="size-4 shrink-0" />
+                      <span>Assinatura</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={handleSignOut}
