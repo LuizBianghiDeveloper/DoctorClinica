@@ -29,7 +29,7 @@ interface AppointmentsViewProps {
   businessHours: ClinicBusinessHour[];
 }
 
-export function AppointmentsView({
+function AppointmentsViewInner({
   appointments,
   doctors,
   columns,
@@ -147,4 +147,8 @@ export function AppointmentsView({
       </TabsContent>
     </Tabs>
   );
+}
+
+export function AppointmentsView(props: AppointmentsViewProps) {
+  return <AppointmentsViewInner {...props} />;
 }
