@@ -70,6 +70,7 @@ const UsersPage = async () => {
               role: m.role,
             }))}
             isAdmin={isAdmin}
+            currentUserId={session.user.id}
           />
         </PageContent>
       </PageContainer>
