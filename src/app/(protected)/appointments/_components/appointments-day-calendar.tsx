@@ -3,7 +3,8 @@
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import dayjs from "dayjs";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, FileTextIcon } from "lucide-react";
+import Link from "next/link";
 import React, { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -266,10 +267,12 @@ export function AppointmentsDayCalendar({
                   const colorIndex = getDoctorColorIndex(appointment.doctorId, doctors);
                   const colorClass = DOCTOR_COLORS[colorIndex];
                   return (
-                    <div
+                    <Link
                       key={appointment.id}
+                      href={`/patients/${appointment.patient.id}/historico`}
+                      title="Abrir prontuário"
                       className={cn(
-                        "absolute flex flex-col justify-center gap-y-0.5 rounded-xl border px-2 py-1.5 text-white shadow-md transition-shadow hover:shadow-lg",
+                        "absolute flex flex-col justify-center gap-y-0.5 rounded-xl border px-2 py-1.5 text-left text-white shadow-md transition-shadow hover:shadow-lg cursor-pointer",
                         colorClass,
                       )}
                       style={{
@@ -279,8 +282,11 @@ export function AppointmentsDayCalendar({
                         width: total > 1 ? `calc(${widthPct}% - ${gapPx}px)` : "calc(100% - 4px)",
                       }}
                     >
-                      <span className="truncate text-xs font-medium leading-tight">
-                        {appointment.patient.name}
+                      <span className="flex items-center gap-1.5">
+                        <span className="truncate text-xs font-medium leading-tight min-w-0">
+                          {appointment.patient.name}
+                        </span>
+                        <FileTextIcon className="size-3.5 shrink-0 opacity-90" aria-hidden />
                       </span>
                       <span className="text-[11px] leading-tight opacity-90">
                         {appointment.endDate
@@ -290,7 +296,7 @@ export function AppointmentsDayCalendar({
                       <span className="truncate text-[11px] leading-tight opacity-80">
                         {appointment.doctor.name}
                       </span>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
