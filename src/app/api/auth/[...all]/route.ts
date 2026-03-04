@@ -1,5 +1,5 @@
-import { type NextRequest, NextResponse } from "next/server";
 import { toNextJsHandler } from "better-auth/next-js";
+import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 
