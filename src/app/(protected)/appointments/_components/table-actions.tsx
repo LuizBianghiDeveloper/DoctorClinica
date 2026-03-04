@@ -2,11 +2,13 @@
 
 import {
   CheckCircleIcon,
+  FileTextIcon,
   MessageCircleIcon,
   MoreVerticalIcon,
   TrashIcon,
   XCircleIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
@@ -122,6 +124,13 @@ const AppointmentsTableActions = ({
         >
           <XCircleIcon className="mr-2 size-4" />
           Marcar como desmarcado
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href={`/patients/${appointment.patient.id}/historico`}>
+            <FileTextIcon className="mr-2 size-4" />
+            Prontuário
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
