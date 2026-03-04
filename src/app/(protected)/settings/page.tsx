@@ -23,7 +23,11 @@ const SettingsPage = async () => {
   if (!session?.user) redirect("/authentication");
   if (!session.user.clinic?.id) redirect("/clinic-form");
 
-  const { clinic, businessHours } = await getClinic(session.user.clinic.id);
+  const isAdmin = (session.user as { role?: string }).role === "admin";
+
+  const clinicData = isAdmin
+    ? await getClinic(session.user.clinic.id)
+    : null;
 
   return (
     <WithAuthentication mustHaveClinic>
@@ -36,13 +40,20 @@ const SettingsPage = async () => {
               Configurações
             </PageTitle>
             <PageDescription>
-              Gerencie suas informações e preferências da conta
+              {isAdmin
+                ? "Gerencie suas informações e preferências da conta"
+                : "Altere sua senha de acesso"}
             </PageDescription>
           </PageHeaderContent>
         </PageHeader>
         <PageContent className="relative">
           <div className="space-y-10">
-            <ClinicForm clinic={clinic ?? null} businessHours={businessHours} />
+            {isAdmin && clinicData && (
+              <ClinicForm
+                clinic={clinicData.clinic ?? null}
+                businessHours={clinicData.businessHours}
+              />
+            )}
             <ChangePasswordForm userEmail={session.user.email} />
           </div>
         </PageContent>
