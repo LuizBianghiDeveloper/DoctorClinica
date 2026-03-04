@@ -10,7 +10,7 @@ import { auth } from "@/lib/auth";
 
 const WithAuthentication = async ({
   children,
-  mustHavePlan = false,
+  mustHavePlan: _mustHavePlan = false,
   mustHaveClinic = false,
 }: {
   children: React.ReactNode;
@@ -23,9 +23,10 @@ const WithAuthentication = async ({
   if (!session?.user) {
     redirect("/authentication");
   }
-  if (mustHavePlan && !session.user.plan) {
-    redirect("/new-subscription");
-  }
+  // Assinatura desabilitada temporariamente - ir direto ao dashboard
+  // if (mustHavePlan && !session.user.plan) {
+  //   redirect("/new-subscription");
+  // }
   if (mustHaveClinic && !session.user.clinic) {
     redirect("/clinic-form");
   }
