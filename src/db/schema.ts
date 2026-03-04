@@ -426,7 +426,7 @@ export const appointmentsTable = pgTable("appointments", {
 
 export const appointmentsTableRelations = relations(
   appointmentsTable,
-  ({ one }) => ({
+  ({ one, many }) => ({
     clinic: one(clinicsTable, {
       fields: [appointmentsTable.clinicId],
       references: [clinicsTable.id],
@@ -446,6 +446,165 @@ export const appointmentsTableRelations = relations(
     room: one(roomsTable, {
       fields: [appointmentsTable.roomId],
       references: [roomsTable.id],
+    }),
+    clinicalEvolution: one(clinicalEvolutionsTable),
+    prescriptions: many(prescriptionsTable),
+    exams: many(patientExamsTable),
+    diagnoses: many(appointmentDiagnosesTable),
+  }),
+);
+
+// Prontuário eletrônico - Evolução clínica (SOAP)
+export const clinicalEvolutionsTable = pgTable("clinical_evolutions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  appointmentId: uuid("appointment_id")
+    .notNull()
+    .unique()
+    .references(() => appointmentsTable.id, { onDelete: "cascade" }),
+  subjective: text("subjective"),
+  objective: text("objective"),
+  assessment: text("assessment"),
+  plan: text("plan"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
+export const clinicalEvolutionsTableRelations = relations(
+  clinicalEvolutionsTable,
+  ({ one }) => ({
+    appointment: one(appointmentsTable, {
+      fields: [clinicalEvolutionsTable.appointmentId],
+      references: [appointmentsTable.id],
+    }),
+  }),
+);
+
+// Prescrições / receitas
+export const prescriptionsTable = pgTable("prescriptions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  appointmentId: uuid("appointment_id")
+    .notNull()
+    .references(() => appointmentsTable.id, { onDelete: "cascade" }),
+  patientId: uuid("patient_id")
+    .notNull()
+    .references(() => patientsTable.id, { onDelete: "cascade" }),
+  doctorId: uuid("doctor_id")
+    .notNull()
+    .references(() => doctorsTable.id, { onDelete: "cascade" }),
+  clinicId: uuid("clinic_id")
+    .notNull()
+    .references(() => clinicsTable.id, { onDelete: "cascade" }),
+  additionalInstructions: text("additional_instructions"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const prescriptionsTableRelations = relations(
+  prescriptionsTable,
+  ({ one, many }) => ({
+    appointment: one(appointmentsTable, {
+      fields: [prescriptionsTable.appointmentId],
+      references: [appointmentsTable.id],
+    }),
+    patient: one(patientsTable, {
+      fields: [prescriptionsTable.patientId],
+      references: [patientsTable.id],
+    }),
+    doctor: one(doctorsTable, {
+      fields: [prescriptionsTable.doctorId],
+      references: [doctorsTable.id],
+    }),
+    clinic: one(clinicsTable, {
+      fields: [prescriptionsTable.clinicId],
+      references: [clinicsTable.id],
+    }),
+    items: many(prescriptionItemsTable),
+  }),
+);
+
+export const prescriptionItemsTable = pgTable("prescription_items", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  prescriptionId: uuid("prescription_id")
+    .notNull()
+    .references(() => prescriptionsTable.id, { onDelete: "cascade" }),
+  medication: text("medication").notNull(),
+  dosage: text("dosage").notNull(),
+  instructions: text("instructions"),
+  displayOrder: integer("display_order").default(0).notNull(),
+});
+
+export const prescriptionItemsTableRelations = relations(
+  prescriptionItemsTable,
+  ({ one }) => ({
+    prescription: one(prescriptionsTable, {
+      fields: [prescriptionItemsTable.prescriptionId],
+      references: [prescriptionsTable.id],
+    }),
+  }),
+);
+
+// Exames solicitados
+export const examStatusEnum = pgEnum("exam_status", [
+  "requested",
+  "pending",
+  "done",
+  "cancelled",
+]);
+
+export const patientExamsTable = pgTable("patient_exams", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  appointmentId: uuid("appointment_id")
+    .notNull()
+    .references(() => appointmentsTable.id, { onDelete: "cascade" }),
+  patientId: uuid("patient_id")
+    .notNull()
+    .references(() => patientsTable.id, { onDelete: "cascade" }),
+  clinicId: uuid("clinic_id")
+    .notNull()
+    .references(() => clinicsTable.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  status: examStatusEnum("status").default("requested").notNull(),
+  resultNotes: text("result_notes"),
+  requestedAt: timestamp("requested_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+});
+
+export const patientExamsTableRelations = relations(
+  patientExamsTable,
+  ({ one }) => ({
+    appointment: one(appointmentsTable, {
+      fields: [patientExamsTable.appointmentId],
+      references: [appointmentsTable.id],
+    }),
+    patient: one(patientsTable, {
+      fields: [patientExamsTable.patientId],
+      references: [patientsTable.id],
+    }),
+    clinic: one(clinicsTable, {
+      fields: [patientExamsTable.clinicId],
+      references: [clinicsTable.id],
+    }),
+  }),
+);
+
+// Diagnósticos CID (Classificação Internacional de Doenças)
+export const appointmentDiagnosesTable = pgTable("appointment_diagnoses", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  appointmentId: uuid("appointment_id")
+    .notNull()
+    .references(() => appointmentsTable.id, { onDelete: "cascade" }),
+  icdCode: text("icd_code").notNull(),
+  description: text("description").notNull(),
+  displayOrder: integer("display_order").default(0).notNull(),
+});
+
+export const appointmentDiagnosesTableRelations = relations(
+  appointmentDiagnosesTable,
+  ({ one }) => ({
+    appointment: one(appointmentsTable, {
+      fields: [appointmentDiagnosesTable.appointmentId],
+      references: [appointmentsTable.id],
     }),
   }),
 );
