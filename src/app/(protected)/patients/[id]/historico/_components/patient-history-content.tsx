@@ -11,37 +11,71 @@ import { toast } from "sonner";
 import { updateAppointmentNotes } from "@/actions/update-appointment-notes";
 import { Button } from "@/components/ui/button";
 import { RichTextContent, RichTextEditor } from "@/components/ui/rich-text-editor";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { doctorsTable } from "@/db/schema";
 
-type AppointmentWithDoctor = {
+import { ClinicalEvolutionForm } from "./clinical-evolution-form";
+import { DiagnosesSection } from "./diagnoses-section";
+import { ExamsSection } from "./exams-section";
+import { PrescriptionSection } from "./prescription-section";
+
+type AppointmentFull = {
   id: string;
   date: Date;
   endDate: Date | null;
   notes: string | null;
+  patientId: string;
+  doctorId: string;
   doctor:
     | (typeof doctorsTable.$inferSelect & {
         specialties?: { specialty: string }[];
       })
     | null;
+  patient: { id: string; name: string; birthDate: string | null } | null;
+  clinicalEvolution: {
+    id: string;
+    subjective: string | null;
+    objective: string | null;
+    assessment: string | null;
+    plan: string | null;
+  } | null;
+  prescriptions: Array<{
+    id: string;
+    additionalInstructions: string | null;
+    items: Array<{ medication: string; dosage: string; instructions: string | null }>;
+  }>;
+  exams: Array<{
+    id: string;
+    name: string;
+    status: "requested" | "pending" | "done" | "cancelled";
+  }>;
+  diagnoses: Array<{ id: string; icdCode: string; description: string }>;
 };
 
 interface PatientHistoryContentProps {
   patientId: string;
   patientName: string;
+  patientBirthDate?: string | null;
   allergiesRestrictions?: string | null;
-  initialAppointments: AppointmentWithDoctor[];
+  initialAppointments: AppointmentFull[];
+  clinicName: string;
+  clinicAddress?: string | null;
 }
 
 export function PatientHistoryContent({
   patientId: _patientId,
   patientName,
+  patientBirthDate,
   allergiesRestrictions,
   initialAppointments,
+  clinicName,
+  clinicAddress,
 }: PatientHistoryContentProps) {
   const router = useRouter();
   const [appointments, setAppointments] = useState(initialAppointments);
   const [editingNotesId, setEditingNotesId] = useState<string | null>(null);
   const [notesDraft, setNotesDraft] = useState("");
+  const [editingEvolutionId, setEditingEvolutionId] = useState<string | null>(null);
 
   useEffect(() => {
     setAppointments(initialAppointments);
@@ -58,7 +92,7 @@ export function PatientHistoryContent({
     },
   });
 
-  const handleStartEditNotes = (appointment: AppointmentWithDoctor) => {
+  const handleStartEditNotes = (appointment: AppointmentFull) => {
     setEditingNotesId(appointment.id);
     setNotesDraft(appointment.notes ?? "");
   };
@@ -106,6 +140,8 @@ export function PatientHistoryContent({
           {appointments.map((appointment) => {
             const doctor = appointment.doctor;
             const isEditing = editingNotesId === appointment.id;
+            const isEditingEvolution = editingEvolutionId === appointment.id;
+            const prescription = appointment.prescriptions?.[0] ?? null;
             return (
               <li key={appointment.id}>
                 <div className="rounded-2xl border border-border/50 bg-card p-5 shadow-xl shadow-primary/5 transition-shadow hover:shadow-primary/10">
@@ -126,57 +162,149 @@ export function PatientHistoryContent({
                       </span>
                     )}
                   </div>
-                  <div className="mt-4">
-                    {isEditing ? (
-                      <div className="space-y-3">
-                        <RichTextEditor
-                          value={notesDraft}
-                          onChange={setNotesDraft}
-                          placeholder="Anotações do atendimento..."
-                          minHeight="140px"
-                          compact
-                        />
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
-                            onClick={() => handleSaveNotes(appointment.id)}
-                            disabled={updateNotesAction.isExecuting}
-                          >
-                            {updateNotesAction.isExecuting ? (
-                              <Loader2 className="size-4 animate-spin" />
-                            ) : (
-                              "Salvar"
-                            )}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-primary/20 hover:bg-primary/5"
-                            onClick={handleCancelEditNotes}
-                            disabled={updateNotesAction.isExecuting}
-                          >
-                            Cancelar
-                          </Button>
+
+                  <Tabs defaultValue="notes" className="mt-4">
+                    <TabsList className="mb-3 grid w-full grid-cols-5">
+                      <TabsTrigger value="notes">Anotações</TabsTrigger>
+                      <TabsTrigger value="evolution">Evolução</TabsTrigger>
+                      <TabsTrigger value="prescription">Prescrição</TabsTrigger>
+                      <TabsTrigger value="exams">Exames</TabsTrigger>
+                      <TabsTrigger value="diagnoses">CID</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="notes" className="mt-0">
+                      {isEditing ? (
+                        <div className="space-y-3">
+                          <RichTextEditor
+                            value={notesDraft}
+                            onChange={setNotesDraft}
+                            placeholder="Anotações do atendimento..."
+                            minHeight="140px"
+                            compact
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              className="bg-gradient-to-r from-clinic-primary to-clinic-secondary hover:brightness-95"
+                              onClick={() => handleSaveNotes(appointment.id)}
+                              disabled={updateNotesAction.isExecuting}
+                            >
+                              {updateNotesAction.isExecuting ? (
+                                <Loader2 className="size-4 animate-spin" />
+                              ) : (
+                                "Salvar"
+                              )}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={handleCancelEditNotes}
+                              disabled={updateNotesAction.isExecuting}
+                            >
+                              Cancelar
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <>
-                        <RichTextContent
-                          html={appointment.notes ?? ""}
-                          className="text-sm"
+                      ) : (
+                        <>
+                          <RichTextContent
+                            html={appointment.notes ?? ""}
+                            className="text-sm"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="mt-2 h-8 text-muted-foreground"
+                            onClick={() => handleStartEditNotes(appointment)}
+                          >
+                            {appointment.notes ? "Editar anotações" : "Adicionar anotações"}
+                          </Button>
+                        </>
+                      )}
+                    </TabsContent>
+
+                    <TabsContent value="evolution" className="mt-0">
+                      {isEditingEvolution ? (
+                        <ClinicalEvolutionForm
+                          appointmentId={appointment.id}
+                          initialData={appointment.clinicalEvolution}
+                          onCancel={() => setEditingEvolutionId(null)}
                         />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="mt-2 h-8 text-muted-foreground"
-                          onClick={() => handleStartEditNotes(appointment)}
-                        >
-                          {appointment.notes ? "Editar anotações" : "Adicionar anotações"}
-                        </Button>
-                      </>
-                    )}
-                  </div>
+                      ) : (
+                        <>
+                          {appointment.clinicalEvolution &&
+                          (appointment.clinicalEvolution.subjective ||
+                            appointment.clinicalEvolution.objective ||
+                            appointment.clinicalEvolution.assessment ||
+                            appointment.clinicalEvolution.plan) ? (
+                            <div className="space-y-3 text-sm">
+                              {appointment.clinicalEvolution.subjective && (
+                                <div>
+                                  <span className="text-muted-foreground font-medium">S: </span>
+                                  <span>{appointment.clinicalEvolution.subjective}</span>
+                                </div>
+                              )}
+                              {appointment.clinicalEvolution.objective && (
+                                <div>
+                                  <span className="text-muted-foreground font-medium">O: </span>
+                                  <span>{appointment.clinicalEvolution.objective}</span>
+                                </div>
+                              )}
+                              {appointment.clinicalEvolution.assessment && (
+                                <div>
+                                  <span className="text-muted-foreground font-medium">A: </span>
+                                  <span>{appointment.clinicalEvolution.assessment}</span>
+                                </div>
+                              )}
+                              {appointment.clinicalEvolution.plan && (
+                                <div>
+                                  <span className="text-muted-foreground font-medium">P: </span>
+                                  <span>{appointment.clinicalEvolution.plan}</span>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-muted-foreground text-sm">
+                              Nenhuma evolução clínica registrada.
+                            </p>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="mt-2 h-8 text-muted-foreground"
+                            onClick={() => setEditingEvolutionId(appointment.id)}
+                          >
+                            {appointment.clinicalEvolution ? "Editar evolução" : "Adicionar evolução SOAP"}
+                          </Button>
+                        </>
+                      )}
+                    </TabsContent>
+
+                    <TabsContent value="prescription" className="mt-0">
+                      <PrescriptionSection
+                        appointment={appointment}
+                        prescription={prescription}
+                        patientBirthDate={patientBirthDate}
+                        clinicName={clinicName}
+                        clinicAddress={clinicAddress}
+                      />
+                    </TabsContent>
+
+                    <TabsContent value="exams" className="mt-0">
+                      <ExamsSection
+                        appointmentId={appointment.id}
+                        patientId={appointment.patientId}
+                        exams={appointment.exams ?? []}
+                      />
+                    </TabsContent>
+
+                    <TabsContent value="diagnoses" className="mt-0">
+                      <DiagnosesSection
+                        appointmentId={appointment.id}
+                        diagnoses={appointment.diagnoses ?? []}
+                      />
+                    </TabsContent>
+                  </Tabs>
                 </div>
               </li>
             );

@@ -22,7 +22,14 @@ export async function getPatientHistory({ patientId, clinicId }: Params) {
         eq(appointmentsTable.clinicId, clinicId),
       ),
       orderBy: (t, { desc }) => [desc(t.date)],
-      with: { doctor: { with: { specialties: true } } },
+      with: {
+        doctor: { with: { specialties: true } },
+        patient: true,
+        clinicalEvolution: true,
+        prescriptions: { with: { items: true } },
+        exams: true,
+        diagnoses: true,
+      },
     }),
   ]);
   return { patient, appointments };

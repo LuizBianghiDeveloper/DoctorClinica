@@ -23,8 +23,9 @@ export default async function PatientHistoricoPage({ params }: PatientHistoricoP
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  const clinicId = session?.user?.clinic?.id;
-  if (!clinicId) {
+  const clinic = session?.user?.clinic;
+  const clinicId = clinic?.id;
+  if (!clinicId || !clinic) {
     notFound();
   }
   const { id: patientId } = await params;
@@ -43,7 +44,7 @@ export default async function PatientHistoricoPage({ params }: PatientHistoricoP
               Histórico de consultas
             </PageTitle>
             <PageDescription>
-              Todas as consultas de {patient.name} na clínica, com anotações dos profissionais.
+              Prontuário eletrônico completo: evolução clínica (SOAP), prescrições, exames e diagnósticos CID.
             </PageDescription>
           </PageHeaderContent>
         </PageHeader>
@@ -51,8 +52,11 @@ export default async function PatientHistoricoPage({ params }: PatientHistoricoP
           <PatientHistoryContent
             patientId={patient.id}
             patientName={patient.name}
+            patientBirthDate={patient.birthDate}
             allergiesRestrictions={patient.allergiesRestrictions}
             initialAppointments={appointments}
+            clinicName={clinic.name}
+            clinicAddress={undefined}
           />
         </PageContent>
       </PageContainer>
