@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { SUBSCRIPTION_ENABLED } from "@/config/subscription";
 import { auth } from "@/lib/auth";
 
 import { SubscriptionPlan } from "../(protected)/subscription/_components/subscription-plan";
@@ -12,6 +13,9 @@ export default async function NewSubscriptionPage() {
   });
   if (!session) {
     redirect("/authentication");
+  }
+  if (!SUBSCRIPTION_ENABLED) {
+    redirect("/dashboard");
   }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-6">
