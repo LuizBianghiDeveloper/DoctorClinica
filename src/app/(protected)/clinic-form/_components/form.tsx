@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,12 +19,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 const clinicFormSchema = z.object({
   name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
 });
 
 const ClinicForm = () => {
+  const router = useRouter();
+  const { refetch: refetchSession } = authClient.useSession();
   const form = useForm<z.infer<typeof clinicFormSchema>>({
     resolver: zodResolver(clinicFormSchema),
     defaultValues: {
@@ -34,11 +37,13 @@ const ClinicForm = () => {
 
   const onSubmit = async (data: z.infer<typeof clinicFormSchema>) => {
     try {
-      await createClinic(data.name);
-    } catch (error) {
-      if (isRedirectError(error)) {
-        return;
+      const result = await createClinic(data.name);
+      if (result?.success) {
+        await refetchSession();
+        router.refresh();
+        router.push("/dashboard");
       }
+    } catch (error) {
       console.error(error);
       toast.error("Erro ao criar clínica.");
     }
