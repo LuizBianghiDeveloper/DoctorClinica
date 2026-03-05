@@ -103,6 +103,10 @@ const AppointmentsPage = async ({ searchParams }: AppointmentsPageProps) => {
               doctors={doctorsForFilter}
               columns={appointmentsTableColumns}
               businessHours={businessHours}
+              patients={patients}
+              doctorsWithAvailability={doctors}
+              appointmentTypes={appointmentTypes}
+              rooms={rooms}
             />
           </Suspense>
         </PageContent>

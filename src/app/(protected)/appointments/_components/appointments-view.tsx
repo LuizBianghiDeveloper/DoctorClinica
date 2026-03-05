@@ -9,7 +9,13 @@ import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { appointmentsTable } from "@/db/schema";
+import {
+  appointmentsTable,
+  appointmentTypesTable,
+  doctorsTable,
+  patientsTable,
+  roomsTable,
+} from "@/db/schema";
 
 import { AppointmentsDayCalendar } from "./appointments-day-calendar";
 
@@ -20,6 +26,11 @@ type AppointmentWithRelations = (typeof appointmentsTable.$inferSelect) & {
   doctor: { id: string; name: string; specialties?: { specialty: string }[] };
 };
 
+type Patient = (typeof patientsTable.$inferSelect);
+type DoctorWithAvailability = (typeof doctorsTable.$inferSelect);
+type AppointmentType = typeof appointmentTypesTable.$inferSelect;
+type Room = typeof roomsTable.$inferSelect;
+
 export type ClinicBusinessHour = { weekDay: number; openTime: string; closeTime: string };
 
 interface AppointmentsViewProps {
@@ -27,6 +38,10 @@ interface AppointmentsViewProps {
   doctors: { id: string; name: string }[];
   columns: ColumnDef<AppointmentWithRelations>[];
   businessHours: ClinicBusinessHour[];
+  patients: Patient[];
+  doctorsWithAvailability: DoctorWithAvailability[];
+  appointmentTypes: AppointmentType[];
+  rooms: Room[];
 }
 
 function AppointmentsViewInner({
@@ -34,6 +49,10 @@ function AppointmentsViewInner({
   doctors,
   columns,
   businessHours,
+  patients,
+  doctorsWithAvailability,
+  appointmentTypes,
+  rooms,
 }: AppointmentsViewProps) {
   const searchParams = useSearchParams();
   const viewFromUrl = searchParams.get("view");
@@ -85,6 +104,10 @@ function AppointmentsViewInner({
           appointments={appointments}
           doctors={doctors}
           businessHours={businessHours}
+          patients={patients}
+          doctorsWithAvailability={doctorsWithAvailability}
+          appointmentTypes={appointmentTypes}
+          rooms={rooms}
         />
       </TabsContent>
       <TabsContent value="list" className="mt-4 space-y-4">

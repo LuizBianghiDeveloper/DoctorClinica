@@ -98,6 +98,8 @@ interface AddAppointmentFormProps {
   appointmentTypes: AppointmentType[];
   rooms: Room[];
   onSuccess?: () => void;
+  initialDate?: Date;
+  initialTime?: string;
 }
 
 const AddAppointmentForm = ({
@@ -107,6 +109,8 @@ const AddAppointmentForm = ({
   rooms,
   onSuccess,
   isOpen,
+  initialDate,
+  initialTime,
 }: AddAppointmentFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     shouldUnregister: true,
@@ -176,8 +180,8 @@ const AddAppointmentForm = ({
         appointmentTypeId: null,
         roomId: null,
         appointmentPrice: 0,
-        date: undefined,
-        time: "",
+        date: initialDate,
+        time: initialTime ?? "",
         durationInMinutes: 30,
         recurrenceCount: 1,
         recurrenceWeekDays: [],
@@ -185,7 +189,7 @@ const AddAppointmentForm = ({
         sendWhatsAppConfirmation: false,
       });
     }
-  }, [isOpen, form]);
+  }, [isOpen, form, initialDate, initialTime]);
 
   // Ao mudar a data com série ativa, sugerir o dia da semana da data nos dias de recorrência
   useEffect(() => {
