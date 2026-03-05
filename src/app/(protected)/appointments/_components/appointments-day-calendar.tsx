@@ -9,20 +9,21 @@ import React, { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Dialog } from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
-  appointmentTypesTable,
   appointmentsTable,
+  appointmentTypesTable,
   doctorsTable,
   patientsTable,
   roomsTable,
 } from "@/db/schema";
 import { cn } from "@/lib/utils";
-import { Dialog } from "@/components/ui/dialog";
+
 import AddAppointmentForm from "./add-appointment-form";
 
 const DOCTOR_COLORS = [
